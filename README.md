@@ -1,4 +1,4 @@
-# WasteDisposalAgencyFE
+# CityHallFE
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/pas_smartcitywastemanagement/wastedisposalagencyfe.git
+git remote add origin https://gitlab.com/pas_smartcitywastemanagement/cityhallfe.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/pas_smartcitywastemanagement/wastedisposalagencyfe/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.com/pas_smartcitywastemanagement/cityhallfe/-/settings/integrations)
 
 ## Collaborate with your team
 

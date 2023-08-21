@@ -1,0 +1,33 @@
+<nav class="navbar" style="background-color: #1C2534;">
+
+    <a href="/home" class="navbar-brand mx-4 mb-3">
+        <h3 style="color: #A5ACBA;"><i class="fa fa-hashtag me-2"></i>WSAgency</h3>
+    </a>
+
+    <!-- User Info Start -->
+    <div *ngIf="authService.user$ | async as user" class="d-flex align-items-center ms-2 mb-2 p-2 rounded w-100" style="background-color: #333B48;">
+        <div class="position-relative">
+            <img [src]="user.picture" alt="User's profile picture" class="rounded-circle profile-picture" width="50" height="50"/>
+            <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+        </div>
+        <div class="ms-3"  style="color: #F9F9F9;">
+            <h6 class="mb-0">{{ user.nickname }}</h6>
+            <span>Role: {{user['role']}}</span>
+        </div>
+    </div>
+    <!-- User Info End -->
+
+    <!-- Menu Start -->
+    <div class="navbar-nav w-100">
+        <p class="px-4" style="color: #A5ACBA;">MENU</p>
+
+
+        <a routerLink="/home" routerLinkActive="active" class="nav-item nav-link"><i class="fa me-2 fa-house"></i>Home</a>
+        <a routerLink="/contacts" routerLinkActive="active" class="nav-item nav-link"><i class="fa me-2 fa-address-card"></i>Contacts</a>
+    </div>
+<!-- Mode Buttons -->
+
+    <!-- OPERATOR Menu Start -->
+    <app-operator-menu *ngIf="this.role=='OPERATOR'"></app-operator-menu>
+    <!-- OPERATOR Menu End -->
+</nav>

@@ -1,0 +1,44 @@
+<div class="container-fluid pt-4 px-4">
+  <div>
+    <h1 style="font-weight: bold;">Dashboard</h1>
+    <p>Here you can view the location of your Bins and get infos about them.</p>
+  </div>
+  
+  <div class="row p-2">
+    <app-map [bins]="binEntities" (selectedBin)="handleSelectedBin($event)"></app-map>
+  </div>
+
+  <div class="row p-2">
+    <div class="col d-flex justify-content-center">
+      <button class="btn btn-primary w-25 m-2" (click)="findPath()">Find the Path!</button>
+      <button class="btn btn-primary w-25 m-2" [disabled]="!enableUnload" (click)="unloadBins()">Unload the Bins!</button>
+    </div>
+  </div>
+  
+
+  <div class="row p-2">
+    <div class="card p-4 mx-auto">
+      <h4>Information Panel</h4>
+      <div *ngIf="selectedBin" class="row">
+        <div class="col">
+          <p><strong>Bin ID: </strong> {{selectedBin.id}}</p>
+          <p><strong>Capacity: </strong> {{selectedBin.capacity}} kg</p>
+        </div>
+        
+        <div class="col">
+          <p><strong>Latitude: </strong> {{selectedBin.lat}}°</p>
+          <p><strong>Sorted Waste: </strong> {{selectedBin.sortedWaste}} kg</p>
+        </div>
+
+        <div class="col">
+          <p><strong>Longitude: </strong> {{selectedBin.long}}°</p>
+          <p><strong>Unsorted Waste: </strong> {{selectedBin.unsortedWaste}} kg</p>
+        </div>
+      </div>
+
+      <div *ngIf="!selectedBin" class="row">
+        <p>No bins selected</p>
+      </div>
+    </div>
+  </div>
+</div>

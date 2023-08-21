@@ -1,0 +1,26 @@
+<div class="container-fluid position-relative bg-white d-flex p-0">
+  <!-- Spinner Start-->
+  <div class="container" *ngIf="authService.isLoading$ | async; else loading">
+    <app-loading></app-loading>
+  </div>
+
+  <ng-template #loading>
+  <!-- Navbar Start -->
+  <div class="sidebar pe-4 pb-3" style="background-color: #1C2534;">
+    <app-sidebar></app-sidebar>
+  </div>
+  <!-- Navbar End -->
+
+  <!-- Content Start -->
+  <div class="content">
+    <app-navbar></app-navbar>
+    <router-outlet></router-outlet>
+    <div class="d-flex flex-row-reverse">
+      <app-toast></app-toast>
+    </div>
+
+  </div>
+  <!-- Content End-->
+  </ng-template>
+
+</div>

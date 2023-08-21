@@ -1,0 +1,4 @@
+<nav class="navbar navbar-expand navbar-light sticky-top p-1 d-flex justify-content-end" style="background-color: white;">
+  <app-login-button *ngIf="(authService.isAuthenticated$ | async) === false"></app-login-button>
+  <app-logout-button *ngIf="(authService.isAuthenticated$ | async) === true"></app-logout-button>
+</nav>
