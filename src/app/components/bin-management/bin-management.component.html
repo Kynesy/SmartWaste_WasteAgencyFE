@@ -30,7 +30,7 @@
               <div class="col">
                 <p><strong>Longitude: </strong> {{selectedPosition.lng}}°</p>
               </div>
-              <button class="btn btn-primary">Add the Bin!</button>
+              <button class="btn btn-primary" (click)="createBin()">Add the Bin!</button>
             </div>
 
             <div *ngIf="!selectedPosition" class="row">
@@ -44,15 +44,15 @@
             <div *ngIf="selectedBin" class="row">
               <div class="col">
                 <p><strong>Bin ID: </strong> {{selectedBin.id}} </p>
-                <p><strong>Latitude: </strong> {{selectedBin.lat}} °</p>
+                <p><strong>Latitude: </strong> {{selectedBin.latitude}} °</p>
               </div>
               
               <div class="col">
                 <p><strong>Capacity: </strong> {{selectedBin.capacity}} kg</p>
-                <p><strong>Longitude: </strong> {{selectedBin.long}} °</p>
+                <p><strong>Longitude: </strong> {{selectedBin.longitude}} °</p>
               </div>
 
-              <button class="btn btn-danger">Delete the Bin!</button>
+              <button class="btn btn-danger" (click)="deleteBin()">Delete the Bin!</button>
 
             </div>
 

@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import * as Leaflet from 'leaflet';
 import 'leaflet-routing-machine';
 
@@ -18,6 +17,7 @@ export class MapComponent {
   @Input() bins: Bin[] = [];
   @Output() selectedBin = new EventEmitter<Bin>();
   @Output() selectedCoords = new EventEmitter<{ lat: number, lng: number }>();
+  alertBins: Bin[] | undefined;
 
   redBin = new Leaflet.Icon({
     iconUrl: 'assets/redBin.png', // Path to your custom marker icon
@@ -59,7 +59,7 @@ export class MapComponent {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       })
     ],
-    zoom: 16,
+    zoom: 15,
     center: { lat: 40.3539, lng: 18.1750 } // Lecce, Italy coordinates
   }
 
@@ -69,13 +69,29 @@ export class MapComponent {
     this.map = $event;
     this.initMarkers();
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['bins']) {
+      this.clearMarkers();
+      if (this.bins && this.bins.length > 0) {
+        this.initMarkers();
+      }
+    }
+  }
+
+  clearMarkers() {
+    for (const marker of this.markers) {
+      marker.removeFrom(this.map);
+    }
+    this.markers = [];
+  }
   
   initMarkers() {
     for (let index = 0; index < this.bins.length; index++) {
       const tmpBin = this.bins[index];
       const marker = this.generateBin(tmpBin, index);
       marker.addTo(this.map).bindPopup(`<b>Bin ID: </b>${tmpBin.id}<br><b>Capacity: </b>${tmpBin.capacity}`);
-      this.map.panTo({ lat: tmpBin.lat, lng: tmpBin.long});
+      this.map.panTo({ lat: tmpBin.latitude, lng: tmpBin.longitude});
       this.markers.push(marker)
     }
   }
@@ -98,7 +114,7 @@ export class MapComponent {
         break;    
     }
 
-    return Leaflet.marker({ lat: tmpBin.lat, lng: tmpBin.long}, {icon: tmpIcon, draggable: false })
+    return Leaflet.marker({ lat: tmpBin.latitude, lng: tmpBin.longitude}, {icon: tmpIcon, draggable: false })
       .on('click', (event) => this.markerClicked(event, index))
   }
 
@@ -125,14 +141,14 @@ export class MapComponent {
   }
 
   findOptimalPath() {
-    const alertBins = this.bins.filter(bin => bin.alertLevel === 1 || bin.alertLevel === 2);
+    this.alertBins = this.bins.filter(bin => bin.alertLevel === 1 || bin.alertLevel === 2);
   
-    if (alertBins.length < 2) {
+    if (this.alertBins.length < 1) {
       console.log('There are not enough bins with alert level 1 or 2 to calculate a path.');
       return;
     }
   
-    const locations: number[][] = alertBins.map(bin => [bin.long, bin.lat]);
+    const locations: number[][] = this.alertBins.map(bin => [bin.longitude, bin.latitude]);
   
     this.mapService.calculateDistanceMatrix(locations).subscribe((response: any) => {
       const snappedDistances = response.destinations.map((dest: { snapped_distance: any; }) => dest.snapped_distance);
@@ -179,10 +195,13 @@ export class MapComponent {
     return neighbors[0].index;
   }
   
-  removePath(){
+  removePath(): Bin[] | undefined{
     if (this.polyline) {
       this.map.removeLayer(this.polyline);
+      this.initMarkers();
     }
+    
+    return this.alertBins;
   }
   
 }

@@ -8,33 +8,54 @@ import { MapComponent } from '../map/map.component';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
 
-  constructor(private ngZone: NgZone, private binService: BinService){}
+  constructor(private ngZone: NgZone, private binService: BinService) {}
 
   @ViewChild(MapComponent) mapComponent!: MapComponent;
-  selectedBin: Bin | undefined
+  selectedBin: Bin | undefined;
   binEntities: Bin[] = [];
   enableUnload: boolean = false;
 
   ngOnInit(): void {
-      this.binEntities = this.binService.getAllBins();
+    this.binService.getAllBins().subscribe(
+      (bins: Bin[]) => {
+        this.binEntities = bins;
+      },
+      (error: any) => {
+        console.error('Error retrieving bins:', error);
+      }
+    );
   }
 
   handleSelectedBin(bin: Bin) {
-    console.log("UPDATE");
     this.ngZone.run(() => {
       this.selectedBin = bin;
     });
   }
 
-  findPath(){
+  findPath() {
     this.mapComponent.findOptimalPath();
     this.enableUnload = true;
   }
 
-  unloadBins(){
-    this.mapComponent.removePath();
+  unloadBins() {
+    var binsToUnload: Bin[] | undefined = this.mapComponent.removePath();
     this.enableUnload = false;
+    
+    if (binsToUnload) {
+      binsToUnload.forEach((bin: Bin) => {
+        this.binService.unloadBin(bin.id).subscribe(
+          () => {
+            console.log('Bin unloaded successfully:', bin.id);
+          },
+          (error: any) => {
+            console.error('Error unloading bin:', bin.id, error);
+          }
+        );
+      });
+    }
+
+    this.ngOnInit();
   }
 }

@@ -1,8 +1,8 @@
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MapComponent } from '../map/map.component';
-import { last } from 'rxjs';
 import { Bin } from 'src/app/models/bin';
 import { BinService } from 'src/app/services/bin.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-bin-management',
@@ -17,10 +17,17 @@ export class BinManagementComponent implements OnInit{
   selectedBin: Bin | undefined;
   binEntities: Bin[] = []
 
-  constructor(private ngZone: NgZone, private binService: BinService){}
+  constructor(private ngZone: NgZone, private binService: BinService, private toastService: ToastService){}
 
   ngOnInit(): void {
-      this.binEntities = this.binService.getAllBins();
+        this.binService.getAllBins().subscribe(
+      (bins: Bin[]) => {
+        this.binEntities = bins;
+      },
+      (error: any) => {
+        console.error('Error retrieving bins:', error);
+      }
+    );
   }
 
   toggleAddBin() {
@@ -39,9 +46,47 @@ export class BinManagementComponent implements OnInit{
   }
 
   handleSelectedBin(bin: Bin) {
-    console.log("UPDATE");
     this.ngZone.run(() => {
       this.selectedBin = bin;
     });
+  }
+
+  deleteBin() {
+    if(this.selectedBin){
+      this.binService.deleteBin(this.selectedBin.id).subscribe(
+        (response) => {
+          this.ngOnInit();
+          this.toastService.showSuccessToast('Bin deleted with success.');
+        },
+        (error) => {
+          this.toastService.showErrorToast('Error  bin.');
+          console.error("Error updating user: ", error);
+        }
+      );
+    }
+  }
+  
+  createBin() {
+    if(this.selectedPosition){
+      var bin: Bin = {
+        id: '',
+        latitude: this.selectedPosition.lat,
+        longitude: this.selectedPosition.lng,
+        capacity: 100,
+        sortedWaste: 0,
+        unsortedWaste: 0,
+        alertLevel: 0
+      }
+      this.binService.createBin(bin).subscribe(
+        (response) => {
+          this.ngOnInit();
+          this.toastService.showSuccessToast('Bin created with success.');
+        },
+        (error) => {
+          this.toastService.showErrorToast('Error creating bin.');
+          console.error("Error updating user: ", error);
+        }
+      );
+    }
   }
 }
