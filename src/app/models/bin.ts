@@ -1,7 +1,7 @@
 export interface Bin {
     id: string
-    lat: number,
-    long: number,
+    latitude: number,
+    longitude: number,
     capacity: number,
     sortedWaste: number,
     unsortedWaste: number,
