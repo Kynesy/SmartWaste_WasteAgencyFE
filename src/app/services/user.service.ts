@@ -9,7 +9,7 @@ import { User } from '../models/user';
 })
 export class UserService {
   authToken: string | null = null
-  baseUrl: string = "http://localhost:8080/api/user/";
+  baseUrl: string = "http://localhost:8081/api/user/";
 
   constructor(private authService: AuthService, private httpClient: HttpClient) {
     this.authService.idTokenClaims$.subscribe(
@@ -61,8 +61,7 @@ export class UserService {
       console.log(this.authToken);
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
-    console.log(updateUrl);
-    console.log(user);
+
     return this.httpClient.post(updateUrl, user, this.httpOptions);
   }
 
