@@ -140,7 +140,7 @@ export class MapComponent {
     this.markers.push(marker);
   }
 
-  findOptimalPath() {
+  findOptimalPath(): Bin[] | undefined {
     this.alertBins = this.bins.filter(bin => bin.alertLevel === 1 || bin.alertLevel === 2);
   
     if (this.alertBins.length < 1) {
@@ -170,6 +170,8 @@ export class MapComponent {
       this.map.fitBounds(this.polyline.getBounds());
   
     });
+
+    return this.alertBins;
   }
   
   calculateOptimalPath(distances: number[][]) {
@@ -195,13 +197,12 @@ export class MapComponent {
     return neighbors[0].index;
   }
   
-  removePath(): Bin[] | undefined{
+  removePath(){
     if (this.polyline) {
       this.map.removeLayer(this.polyline);
       this.initMarkers();
     }
-    
-    return this.alertBins;
+
   }
   
 }

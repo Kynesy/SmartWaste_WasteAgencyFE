@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   selectedBin: Bin | undefined;
   binEntities: Bin[] = [];
+  binsToUnload: Bin[] | undefined;
   enableUnload: boolean = false;
 
   ngOnInit(): void {
@@ -35,26 +36,15 @@ export class DashboardComponent implements OnInit {
   }
 
   findPath() {
-    this.mapComponent.findOptimalPath();
+    this.binsToUnload = this.mapComponent.findOptimalPath();
     this.enableUnload = true;
   }
 
-  unloadBins() {
-    var binsToUnload: Bin[] | undefined = this.mapComponent.removePath();
+  binsUnloaded() {
+    this.mapComponent.removePath();
     this.enableUnload = false;
-    
-    if (binsToUnload) {
-      binsToUnload.forEach((bin: Bin) => {
-        this.binService.unloadBin(bin.id).subscribe(
-          () => {
-            console.log('Bin unloaded successfully:', bin.id);
-          },
-          (error: any) => {
-            console.error('Error unloading bin:', bin.id, error);
-          }
-        );
-      });
-    }
+    this.binsToUnload = undefined;
+
 
     this.ngOnInit();
   }

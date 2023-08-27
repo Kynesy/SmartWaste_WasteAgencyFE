@@ -11,10 +11,20 @@
   <div class="row p-2">
     <div class="col d-flex justify-content-center">
       <button class="btn btn-primary w-25 m-2" (click)="findPath()">Find the Path!</button>
-      <button class="btn btn-primary w-25 m-2" [disabled]="!enableUnload" (click)="unloadBins()">Unload the Bins!</button>
+      <button class="btn btn-primary w-25 m-2" [disabled]="!enableUnload" (click)="binsUnloaded()">I have unloaded the bins!</button>
     </div>
   </div>
   
+  <div class="row p-2" *ngIf="binsToUnload">
+    <div class="col">
+      <div class="card p-4 mx-auto">
+        <h4>Bins to Unload</h4>
+        <ol>
+          <li *ngFor="let bin of binsToUnload;">Bin ID: {{ bin.id }}</li>
+        </ol>
+      </div>
+    </div>
+  </div>
 
   <div class="row p-2">
     <div class="card p-4 mx-auto">
