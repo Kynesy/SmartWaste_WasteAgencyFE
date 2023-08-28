@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^16.1.0",
+    "@angular/cdk": "^16.2.1",
     "@angular/common": "^16.1.0",
     "@angular/compiler": "^16.1.0",
     "@angular/core": "^16.1.0",
@@ -20,7 +21,7 @@
     "@angular/router": "^16.1.0",
     "@asymmetrik/ngx-leaflet": "^16.0.1",
     "@auth0/auth0-angular": "^2.2.1",
-    "@ng-bootstrap/ng-bootstrap": "^15.1.0",
+    "@ng-bootstrap/ng-bootstrap": "^15.1.1",
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.3",
     "leaflet": "^1.9.4",

@@ -4,6 +4,8 @@ import { AuthModule } from '@auth0/auth0-angular';
 import { MyAuthGuard } from './security/my-auth-guard.guard';
 import { FormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { DatePipe } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -54,6 +56,7 @@ import { AlertsComponent } from './components/alerts/alerts.component';
     NgbModule,
     HttpClientModule,
     LeafletModule,
+    ScrollingModule,
     AuthModule.forRoot({
       domain: "smart-city-waste-management.eu.auth0.com",
       clientId: "dRjomntHHflKM0fD2lw6QnBedSKOW6uC",
@@ -64,7 +67,8 @@ import { AlertsComponent } from './components/alerts/alerts.component';
   ],
   providers: [
     MyAuthGuard,
-    UserService
+    UserService,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
