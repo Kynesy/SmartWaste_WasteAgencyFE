@@ -58,7 +58,6 @@ export class UserService {
     const updateUrl = this.baseUrl + 'update';
 
     if (this.authToken) {
-      console.log(this.authToken);
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
 
