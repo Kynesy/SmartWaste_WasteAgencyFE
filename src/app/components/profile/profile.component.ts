@@ -2,13 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
-import { FormsModule } from '@angular/forms';
 import { ToastService } from 'src/app/services/toast.service';
+
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
 })
 
 export class ProfileComponent implements OnInit, OnDestroy {
@@ -22,11 +22,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     bdate: ""
   };
   isEditMode: any;
+  selectedDate: any;
 
   constructor(public authService: AuthService, private userService: UserService, private toastService: ToastService) { }
 
-  ngOnInit(): void {
-    this.getUserID();
+  async ngOnInit(): Promise<void> {
+    await this.getUserID();
   }
 
   async getUserID() {
@@ -54,6 +55,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userService.getUser(this.userID).subscribe(
       (user) => {
         this.user = user;
+        this.selectedDate = user.bdate;
       },
       (error) => {
         console.error("Error loading user: ", error);
@@ -63,6 +65,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   updateUser() {
     this.user.id = this.userID;
+    this.updateSelectedDate();
     this.userService.updateUser(this.user).subscribe(
       (response) => {
         this.loadUser(); // Reload the user data after update
@@ -82,5 +85,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
 		this.toastService.clear();
 	}
+
+  updateSelectedDate(): void {
+    if (this.selectedDate) {
+      const selectedDateStr = `${this.selectedDate.year}-${this.selectedDate.month}-${this.selectedDate.day}`;
+      this.user.bdate = selectedDateStr;
+    }
+  }
 
 }
