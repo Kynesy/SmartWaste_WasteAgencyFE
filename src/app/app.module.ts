@@ -29,6 +29,8 @@ import { OperatorMenuComponent } from './components/sidebars/operator-menu/opera
 import { MapComponent } from './components/map/map.component';
 import { BinManagementComponent } from './components/bin-management/bin-management.component';
 import { AlertsComponent } from './components/alerts/alerts.component';
+import TspGreedy from './utils/TspGreedy';
+import TspNearestNeighbor from './utils/TspNearestNeighbor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,7 +70,9 @@ import { AlertsComponent } from './components/alerts/alerts.component';
   providers: [
     MyAuthGuard,
     UserService,
-    DatePipe
+    DatePipe,
+    TspGreedy, 
+    TspNearestNeighbor
   ],
   bootstrap: [AppComponent]
 })
