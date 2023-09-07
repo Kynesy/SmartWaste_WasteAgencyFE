@@ -9,13 +9,15 @@ import { MapComponent } from '../map/map.component';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  timeToUnload: any;
 
   constructor(private ngZone: NgZone, private binService: BinService) {}
 
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   selectedBin: Bin | undefined;
   binEntities: Bin[] = [];
-  binsToUnload: Bin[] | undefined;
+  routingSolution: any;
+  binsToUnload!: Bin[] | void;
   enableUnload: boolean = false;
 
   ngOnInit(): void {
@@ -35,9 +37,15 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  findPath() {
-    this.binsToUnload = this.mapComponent.findOptimalPath();
-    this.enableUnload = true;
+  async findPath() {
+    this.routingSolution = await this.mapComponent.findOptimalPath().catch(error => {
+      console.error("Error getting path: " + error);
+    });
+    if(this.routingSolution){
+      this.binsToUnload = this.routingSolution.path;
+      this.timeToUnload = this.routingSolution.time;
+      this.enableUnload = true;
+    }
   }
 
   binsUnloaded() {
@@ -45,7 +53,12 @@ export class DashboardComponent implements OnInit {
     this.enableUnload = false;
     this.binsToUnload = undefined;
 
-
     this.ngOnInit();
+  }
+  
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(Math.round(seconds) / 60);
+    const remainingSeconds = Math.round(seconds) - minutes * 60;
+    return `${minutes} mins ${remainingSeconds} secs`;
   }
 }

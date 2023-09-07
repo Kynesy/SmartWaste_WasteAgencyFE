@@ -4,6 +4,8 @@ import 'leaflet-routing-machine';
 
 import { Bin } from 'src/app/models/bin';
 import { MapService } from 'src/app/services/map.service';
+import TspGreedy from 'src/app/utils/TspGreedy';
+import TspNearestNeighbor from 'src/app/utils/TspNearestNeighbor';
 
 Leaflet.Icon.Default.imagePath = 'assets/';
 
@@ -17,40 +19,41 @@ export class MapComponent {
   @Input() bins: Bin[] = [];
   @Output() selectedBin = new EventEmitter<Bin>();
   @Output() selectedCoords = new EventEmitter<{ lat: number, lng: number }>();
-  alertBins: Bin[] | undefined;
+  binsToUnload: Bin[] = [];
+
 
   redBin = new Leaflet.Icon({
-    iconUrl: 'assets/redBin.png', // Path to your custom marker icon
-    iconSize: [30, 30], // Size of the icon image
-    iconAnchor: [15, 15], // Point of the icon which corresponds to marker's location
-    popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+    iconUrl: 'assets/redBin.png',
+    iconSize: [30, 30],
+    iconAnchor: [15, 15], 
+    popupAnchor: [1, -34],
   });
 
   orangeBin = new Leaflet.Icon({
-    iconUrl: 'assets/orangeBin.png', // Path to your custom marker icon
-    iconSize: [30, 30], // Size of the icon image
-    iconAnchor: [15, 15], // Point of the icon which corresponds to marker's location
-    popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+    iconUrl: 'assets/orangeBin.png', 
+    iconSize: [30, 30],
+    iconAnchor: [15, 15], 
+    popupAnchor: [1, -34],
   });
 
   greenBin = new Leaflet.Icon({
-    iconUrl: 'assets/greenBin.png', // Path to your custom marker icon
-    iconSize: [30, 30], // Size of the icon image
-    iconAnchor: [15, 15], // Point of the icon which corresponds to marker's location
-    popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+    iconUrl: 'assets/greenBin.png',
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [1, -34],
   });
 
   blueMarker = new Leaflet.Icon({
-    iconUrl: 'assets/blueMarker.png', // Path to your custom marker icon
-    iconSize: [25, 41], // Size of the icon image
-    iconAnchor: [12, 41], // Point of the icon which corresponds to marker's location
-    popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
-    shadowUrl: 'assets/marker-shadow.png', // Path to the shadow image (optional)
-    shadowSize: [41, 41], // Size of the shadow image (optional)
-    shadowAnchor: [12, 41] // Point of the shadow image which corresponds to marker's location (optional)
+    iconUrl: 'assets/blueMarker.png',
+    iconSize: [25, 41], 
+    iconAnchor: [12, 41], 
+    popupAnchor: [1, -34], 
+    shadowUrl: 'assets/marker-shadow.png', 
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 41]
   });
   
-  private polyline: Leaflet.Polyline | null = null;
+  private pathPolyline: Leaflet.Polyline | null = null;
   map!: Leaflet.Map;
   markers: Leaflet.Marker[] = [];
   options = {
@@ -60,21 +63,29 @@ export class MapComponent {
       })
     ],
     zoom: 15,
-    center: { lat: 40.3539, lng: 18.1750 } // Lecce, Italy coordinates
+    center: { lat: 40.3539, lng: 18.1750 }
   }
 
-  constructor(private mapService: MapService){}
+  constructor(private mapService: MapService, private tspSolver : TspNearestNeighbor){}
 
   onMapReady($event: Leaflet.Map) {
     this.map = $event;
-    this.initMarkers();
+    this.displayAllBins();
+  }
+
+  mapClicked($event: any) {
+    this.selectedCoords.emit({ lat: $event.latlng.lat, lng: $event.latlng.lng })
+  }
+
+  markerClicked($event: any, index: number) {
+    this.selectedBin.emit(this.bins[index]);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['bins']) {
       this.clearMarkers();
       if (this.bins && this.bins.length > 0) {
-        this.initMarkers();
+        this.displayAllBins();
       }
     }
   }
@@ -86,17 +97,17 @@ export class MapComponent {
     this.markers = [];
   }
   
-  initMarkers() {
+  displayAllBins() {
     for (let index = 0; index < this.bins.length; index++) {
       const tmpBin = this.bins[index];
-      const marker = this.generateBin(tmpBin, index);
+      const marker = this.generateBinMarker(tmpBin, index);
       marker.addTo(this.map).bindPopup(`<b>Bin ID: </b>${tmpBin.id}<br><b>Capacity: </b>${tmpBin.capacity}`);
       this.map.panTo({ lat: tmpBin.latitude, lng: tmpBin.longitude});
       this.markers.push(marker)
     }
   }
 
-  generateBin(tmpBin: any, index: number) {
+  generateBinMarker(tmpBin: any, index: number) {
     var tmpIcon: any | undefined;
 
     switch(tmpBin.alertLevel){
@@ -118,14 +129,6 @@ export class MapComponent {
       .on('click', (event) => this.markerClicked(event, index))
   }
 
-  mapClicked($event: any) {
-    this.selectedCoords.emit({ lat: $event.latlng.lat, lng: $event.latlng.lng })
-  }
-
-  markerClicked($event: any, index: number) {
-    this.selectedBin.emit(this.bins[index]);
-  }
-
   generateMarker(lat: number, long: number) {
     const lastMarker = this.markers[this.markers.length - 1];
   
@@ -140,67 +143,61 @@ export class MapComponent {
     this.markers.push(marker);
   }
 
-  findOptimalPath(): Bin[] | undefined {
-    this.alertBins = this.bins.filter(bin => bin.alertLevel === 1 || bin.alertLevel === 2);
+  findOptimalPath(): Promise<any>{
+    var alertBins: Bin[] | undefined;
+    // seleziono i bidoni con capienza minore del 50%
+    alertBins = this.bins.filter(bin => bin.alertLevel === 1 || bin.alertLevel === 2);
   
-    if (this.alertBins.length < 1) {
-      console.log('There are not enough bins with alert level 1 or 2 to calculate a path.');
-      return;
+    // estraggo le coordinate dei bidoni
+    const locations: number[][] = alertBins.map(bin => [bin.longitude, bin.latitude]);
+  
+    return new Promise((resolve, reject) =>{
+      if (alertBins!.length < 1) {
+        reject('There are not enough bins with alert level 1 or 2 to calculate a path.');
+      }else{
+        // ottengo la matrice dei costi dal servizio
+        this.mapService.calculateDistanceMatrix(locations).subscribe((response: any) => {
+          const durationsMatrix = response.durations; 
+    
+          // calcolo la soluzione ottimale
+          const routingSolution = this.tspSolver.findOptimalSolution(durationsMatrix);
+    
+          // riordino i cestini secondo la soluzione ottimale
+          for (var i=0; i<routingSolution.path.length; i++){
+            this.binsToUnload.push(alertBins![routingSolution.path[i]]);
+          }
+          
+          //debug
+          //console.log('Reordered Alert Bins:', alertBins);
+          
+          this.showPath();
+          resolve({"path": this.binsToUnload, "time": routingSolution.distance});
+        });
+      }
+    })
+  }
+  
+  showPath() {
+    if (this.pathPolyline) {
+      this.map.removeLayer(this.pathPolyline);
     }
   
-    const locations: number[][] = this.alertBins.map(bin => [bin.longitude, bin.latitude]);
-  
-    this.mapService.calculateDistanceMatrix(locations).subscribe((response: any) => {
-      const snappedDistances = response.destinations.map((dest: { snapped_distance: any; }) => dest.snapped_distance);
-      const pathIndices = this.calculateOptimalPath(response.durations);
-  
-      const pathCoordinates = pathIndices.map((index, i) => {
-        const snappedDist = snappedDistances[i];
-        const snappedCoord = locations[index];
-        return Leaflet.latLng(snappedCoord[1], snappedCoord[0]);
-      });
-      
-      
-      if (this.polyline) {
-        this.map.removeLayer(this.polyline);
-      }
-  
-      // Create and add the new polyline
-      this.polyline = Leaflet.polyline(pathCoordinates, { color: 'blue' }).addTo(this.map);
-      this.map.fitBounds(this.polyline.getBounds());
-  
+    const pathCoordinates: Leaflet.LatLngExpression[] = this.binsToUnload.map(bin => {
+      return [bin.latitude, bin.longitude]; // Assuming bin.latitude and bin.longitude are numbers
     });
-
-    return this.alertBins;
-  }
   
-  calculateOptimalPath(distances: number[][]) {
-    const n = distances.length;
-    let unvisited = Array.from({ length: n }, (_, i) => i);
-    let pathIndices: number[] = [];
-    let currIndex = 0;
+    // Create and add the new polyline
+    this.pathPolyline = Leaflet.polyline(pathCoordinates, { color: 'blue' }).addTo(this.map);
   
-    while (unvisited.length > 0) {
-      pathIndices.push(currIndex);
-      unvisited = unvisited.filter(index => index !== currIndex);
-      if (unvisited.length > 0) {
-        currIndex = this.findClosestNeighbor(currIndex, unvisited, distances);
-      }
-    }
-  
-    return pathIndices;
-  }
-  
-  findClosestNeighbor(currIndex: number, unvisited: number[], distances: number[][]) {
-    const neighbors = unvisited.map(index => ({ index, distance: distances[currIndex][index] }));
-    neighbors.sort((a, b) => a.distance - b.distance);
-    return neighbors[0].index;
+    // Optionally, you can fit the map bounds to the polyline
+    this.map.fitBounds(this.pathPolyline.getBounds());
   }
   
   removePath(){
-    if (this.polyline) {
-      this.map.removeLayer(this.polyline);
-      this.initMarkers();
+    if (this.pathPolyline) {
+      this.map.removeLayer(this.pathPolyline);
+      this.binsToUnload = [];
+      this.displayAllBins();
     }
 
   }
