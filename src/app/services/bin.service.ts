@@ -64,7 +64,7 @@ export class BinService {
   }
 
   getAllBins(): Observable<Bin[]> {
-    const getAllBinsURL = this.baseUrl + 'getAll';
+    const getAllBinsURL = this.baseUrl + 'get/all';
   
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
@@ -77,36 +77,4 @@ export class BinService {
       })
     );
   }
-  
-
-  unloadBin(binID: string): Observable<any> {
-    const unloadBinURL = this.baseUrl + 'unload/' + binID;
-  
-    if (this.authToken) {
-      this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
-    }
-  
-    return this.httpClient.post(unloadBinURL, null, this.httpOptions).pipe(
-      catchError((error: any) => {
-        console.error('Error unloading bin:', error);
-        throw error;
-      })
-    );
-  }
-  
-  loadBin(binID: string, sortedWaste: number, unsortedWaste: number): Observable<any> {
-    const loadBinURL = this.baseUrl + 'setWaste/' + binID + '/' + sortedWaste + '/' + unsortedWaste;
-  
-    if (this.authToken) {
-      this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
-    }
-  
-    return this.httpClient.post(loadBinURL, null, this.httpOptions).pipe(
-      catchError((error: any) => {
-        console.error('Error loading bin:', error);
-        throw error;
-      })
-    );
-  }
-  
 }

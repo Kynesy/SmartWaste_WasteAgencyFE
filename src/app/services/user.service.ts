@@ -9,7 +9,7 @@ import { User } from '../models/user';
 })
 export class UserService {
   authToken: string | null = null
-  baseUrl: string = "http://localhost:8081/api/user/";
+  baseUrl: string = "http://localhost:8081/api/user";
 
   constructor(private authService: AuthService, private httpClient: HttpClient) {
     this.authService.idTokenClaims$.subscribe(
@@ -29,7 +29,7 @@ export class UserService {
   }
 
   existUser(userEmail: string): Observable<boolean>{
-    const existUrl = this.baseUrl + 'exist/' + userEmail;
+    const existUrl = this.baseUrl + '/exist/' + userEmail;
 
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
@@ -45,7 +45,7 @@ export class UserService {
   }
 
   createUser(user: User): Observable<any> {
-    const createUrl = this.baseUrl + 'create';
+    const createUrl = this.baseUrl + '/create';
 
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
@@ -55,7 +55,7 @@ export class UserService {
   }
 
   updateUser(user: User): Observable<any> {
-    const updateUrl = this.baseUrl + 'update';
+    const updateUrl = this.baseUrl + '/update';
 
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
@@ -65,7 +65,7 @@ export class UserService {
   }
 
   deleteUser(userID: string): Observable<any>{
-    const deleteUrl = this.baseUrl + 'delete/' + userID;
+    const deleteUrl = this.baseUrl + '/delete/' + userID;
 
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
@@ -75,7 +75,7 @@ export class UserService {
   }
 
   getUser(userID: string): Observable<User>{
-    const getUserUrl = this.baseUrl + 'get/' + userID;
+    const getUserUrl = this.baseUrl + '/get/' + userID;
 
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);

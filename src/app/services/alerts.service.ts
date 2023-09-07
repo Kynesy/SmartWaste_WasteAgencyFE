@@ -29,7 +29,7 @@ export class AlertsService {
   }
 
   getAllAlerts(): Observable<Alert[]> {
-    const getAllAlertsURL = this.baseUrl + 'getAll';
+    const getAllAlertsURL = this.baseUrl + 'get/all';
   
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
