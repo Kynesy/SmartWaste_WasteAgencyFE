@@ -9,18 +9,22 @@ import { ToastService } from 'src/app/services/toast.service';
   templateUrl: './bin-management.component.html',
   styleUrls: ['./bin-management.component.scss']
 })
-export class BinManagementComponent implements OnInit{
+export class BinManagementComponent implements OnInit {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   showAddBin = false;
   showDeleteBin = false;
-  selectedPosition: { lat: number; lng: number; } | undefined
+  selectedPosition: { lat: number; lng: number; } | undefined;
   selectedBin: Bin | undefined;
-  binEntities: Bin[] = []
+  binEntities: Bin[] = [];
 
-  constructor(private ngZone: NgZone, private binService: BinService, private toastService: ToastService){}
+  constructor(private ngZone: NgZone, private binService: BinService, private toastService: ToastService) {}
 
+  /**
+   * Metodo chiamato quando il componente è inizializzato.
+   * Recupera tutti i bidoni dal servizio e li memorizza nella lista binEntities.
+   */
   ngOnInit(): void {
-        this.binService.getAllBins().subscribe(
+    this.binService.getAllBins().subscribe(
       (bins: Bin[]) => {
         this.binEntities = bins;
       },
@@ -30,45 +34,65 @@ export class BinManagementComponent implements OnInit{
     );
   }
 
+  /**
+   * Mostra o nasconde il componente per l'aggiunta di un bidone.
+   */
   toggleAddBin() {
     this.showAddBin = !this.showAddBin;
-    this.showDeleteBin = false; // Close the other collapsible
+    this.showDeleteBin = false; // Chiude l'altro componente collassabile
   }
 
+  /**
+   * Mostra o nasconde il componente per la cancellazione di un bidone.
+   */
   toggleDeleteBin() {
     this.showDeleteBin = !this.showDeleteBin;
-    this.showAddBin = false; // Close the other collapsible
+    this.showAddBin = false; // Chiude l'altro componente collassabile
   }
 
+  /**
+   * Gestisce la selezione delle coordinate sulla mappa.
+   * @param {Object} position - Oggetto contenente le coordinate latitudine e longitudine.
+   */
   handleSelectedCoords(position: { lat: number; lng: number; }) {
     this.selectedPosition = position;
     this.mapComponent.generateMarker(position.lat, position.lng);
   }
 
+  /**
+   * Gestisce la selezione di un bidone.
+   * @param {Bin} bin - Il bidone selezionato.
+   */
   handleSelectedBin(bin: Bin) {
     this.ngZone.run(() => {
       this.selectedBin = bin;
     });
   }
 
+  /**
+   * Cancella un bidone selezionato.
+   */
   deleteBin() {
-    if(this.selectedBin){
+    if (this.selectedBin) {
       this.binService.deleteBin(this.selectedBin.id).subscribe(
         (response) => {
-          this.ngOnInit();
+          this.ngOnInit(); // Aggiorna la lista dei bidoni dopo la cancellazione.
           this.toastService.showSuccessToast('Bin deleted with success.');
         },
         (error) => {
-          this.toastService.showErrorToast('Error  bin.');
-          console.error("Error updating user: ", error);
+          this.toastService.showErrorToast('Error deleting bin.');
+          console.error("Error deleting bin: ", error);
         }
       );
     }
   }
-  
+
+  /**
+   * Crea un nuovo bidone con le coordinate selezionate.
+   */
   createBin() {
-    if(this.selectedPosition){
-      var bin: Bin = {
+    if (this.selectedPosition) {
+      const bin: Bin = {
         id: '',
         latitude: this.selectedPosition.lat,
         longitude: this.selectedPosition.lng,
@@ -76,15 +100,15 @@ export class BinManagementComponent implements OnInit{
         sortedWaste: 0,
         unsortedWaste: 0,
         alertLevel: 0
-      }
+      };
       this.binService.createBin(bin).subscribe(
         (response) => {
-          this.ngOnInit();
+          this.ngOnInit(); // Aggiorna la lista dei bidoni dopo la creazione.
           this.toastService.showSuccessToast('Bin created with success.');
         },
         (error) => {
           this.toastService.showErrorToast('Error creating bin.');
-          console.error("Error updating user: ", error);
+          console.error("Error creating bin: ", error);
         }
       );
     }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { Bin } from '../models/bin';
 import { Observable, catchError } from 'rxjs';
+import { SessionStorageService } from './session-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +12,7 @@ export class BinService {
   authToken: string | null = null
   baseUrl: string = "http://localhost:8081/api/bin/";
 
-  constructor(private authService: AuthService, private httpClient: HttpClient) {
-    this.authService.idTokenClaims$.subscribe(
-      (token) => {
-        if(token && token['__raw']){
-          this.authToken = token['__raw']
-        }
-      }
-    )
+  constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }
   
   httpOptions = {
@@ -31,6 +25,7 @@ export class BinService {
   createBin(bin: Bin): Observable<any>{
     const createBinURL = this.baseUrl + 'create';
 
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
@@ -41,6 +36,7 @@ export class BinService {
   deleteBin(binID: string): Observable<any>{
     const deleteBinURL = this.baseUrl + 'delete/' + binID;
 
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
@@ -51,6 +47,7 @@ export class BinService {
   getBin(binID: string): Observable<Bin>{
     const getBinURL = this.baseUrl + 'get/' + binID;
 
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
@@ -66,6 +63,7 @@ export class BinService {
   getAllBins(): Observable<Bin[]> {
     const getAllBinsURL = this.baseUrl + 'get/all';
   
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }

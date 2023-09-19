@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { Observable, catchError, map, of } from 'rxjs';
 import { User } from '../models/user';
+import { SessionStorageService } from './session-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +12,7 @@ export class UserService {
   authToken: string | null = null
   baseUrl: string = "http://localhost:8081/api/user";
 
-  constructor(private authService: AuthService, private httpClient: HttpClient) {
-    this.authService.idTokenClaims$.subscribe(
-      (token) => {
-        if(token && token['__raw']){
-          this.authToken = token['__raw']
-        }
-      }
-    )
+  constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }
   
   httpOptions = {
@@ -28,14 +22,14 @@ export class UserService {
     })
   }
 
-  existUser(userEmail: string): Observable<boolean>{
-    const existUrl = this.baseUrl + '/exist/' + userEmail;
+  existUser(userId: string): Observable<boolean>{
+    const existUrl = this.baseUrl + '/exist/' + userId;
 
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
     
-
     return this.httpClient.get(existUrl, this.httpOptions).pipe(
       map(() => true),
       catchError(() => {
@@ -47,6 +41,7 @@ export class UserService {
   createUser(user: User): Observable<any> {
     const createUrl = this.baseUrl + '/create';
 
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
@@ -57,6 +52,7 @@ export class UserService {
   updateUser(user: User): Observable<any> {
     const updateUrl = this.baseUrl + '/update';
 
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
@@ -67,6 +63,7 @@ export class UserService {
   deleteUser(userID: string): Observable<any>{
     const deleteUrl = this.baseUrl + '/delete/' + userID;
 
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }
@@ -77,6 +74,7 @@ export class UserService {
   getUser(userID: string): Observable<User>{
     const getUserUrl = this.baseUrl + '/get/' + userID;
 
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }

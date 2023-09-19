@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { Observable, catchError } from 'rxjs';
 import { Alert } from '../models/alert';
+import { SessionStorageService } from './session-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +12,7 @@ export class AlertsService {
   authToken: string | null = null
   baseUrl: string = "http://localhost:8081/api/alert/";
 
-  constructor(private authService: AuthService, private httpClient: HttpClient) {
-    this.authService.idTokenClaims$.subscribe(
-      (token) => {
-        if(token && token['__raw']){
-          this.authToken = token['__raw']
-        }
-      }
-    )
+  constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }
 
   httpOptions = {
@@ -31,6 +25,7 @@ export class AlertsService {
   getAllAlerts(): Observable<Alert[]> {
     const getAllAlertsURL = this.baseUrl + 'get/all';
   
+    this.authToken = this.storageService.getData("token");
     if (this.authToken) {
       this.httpOptions.headers = this.httpOptions.headers.set('Authorization', 'Bearer ' + this.authToken);
     }

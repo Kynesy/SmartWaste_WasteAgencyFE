@@ -1,40 +1,38 @@
 <div class="container-fluid pt-4 px-4">
-    <div>
-      <h1 style="font-weight: bold;">Bin ALerts</h1>
-      <p>Here you can view all the alerts sent by your Smart Bins.</p>
+  <div>
+    <h1 style="font-weight: bold;">Bin Alerts</h1>
+    <p>Here you can view all the alerts sent by your Smart Bins.</p>
+  </div>
+
+  <!-- Alert table START -->
+  <div class="card text-center rounded d-flex justify-content-between p-4">
+    <div class="row">
+      <cdk-virtual-scroll-viewport [itemSize]="20">
+        <table class="table text-center align-middle table-bordered table-hover mb-0">
+          <thead>
+            <tr class="text-dark">
+              <th scope="col">Message</th>
+              <th scope="col">Timestamp</th>
+              <th scope="col">Alert Level</th>
+              <th scope="col">Bin ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *cdkVirtualFor="let alert of alertList" class="text-dark">
+              <td>
+                <p *ngIf="alert.alertLevel === 0" class="mb-0 text-success">Waste Level < 50%</p>
+                <p *ngIf="alert.alertLevel === 1" class="mb-0" style="color: rgb(255, 166, 0);">50% < Waste Level < 75%</p>
+                <p *ngIf="alert.alertLevel === 2" class="mb-0 text-danger">75% < Waste Level < 100%</p>
+              </td>
+              
+              <td>{{ formatTimestamp(alert.timestamp, 'yyyy-MM-dd HH:mm:ss') }}</td>
+              <td>{{ alert.alertLevel }}</td>
+              <td>{{ alert.binId }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
     </div>
-
-
-    <!-- Alert table START -->
-    <div class="card text-center rounded d-flex justify-content-between p-4">
-      <div class="row">
-        <cdk-virtual-scroll-viewport [itemSize]="20">
-          <table class="table text-center align-middle table-bordered table-hover mb-0">
-            <thead>
-              <tr class="text-dark">
-                <th scope="col">Message</th>
-                <th scope="col">Timestamp</th>
-                <th scope="col">Alert Level</th>
-                <th scope="col">Bin ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *cdkVirtualFor="let alert of alertList" class="text-dark">
-                <td>
-                  <p *ngIf="alert.alertLevel === 0" class="mb-0 text-success">Waste Level < 50%</p>
-                  <p *ngIf="alert.alertLevel === 1" class="mb-0" style="color: rgb(255, 166, 0);">50% < Waste Level < 75%</p>
-                  <p *ngIf="alert.alertLevel === 2" class="mb-0 text-danger">75% < Waste Level < 100%</p>
-                </td>
-                
-                <td>{{ formatTimestamp(alert.timestamp, 'yyyy-MM-dd HH:mm:ss') }}</td>
-                <td>{{ alert.alertLevel }}</td>
-                <td>{{ alert.binId }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </cdk-virtual-scroll-viewport>
-      </div>
-    </div>
-    <!-- Alert table END -->
-
+  </div>
+  <!-- Alert table END -->
 </div>

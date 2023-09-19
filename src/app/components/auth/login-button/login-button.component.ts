@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-login-button',
   templateUrl: './login-button.component.html',
-  styles: [
-  ]
+  styles: []
 })
-export class LoginButtonComponent implements OnInit{
-  constructor(public auth: AuthService){}
+export class LoginButtonComponent {
+  /**
+   * Costruttore del componente.
+   * @param {AuthService} auth - Il servizio di autenticazione fornito da Auth0.
+   */
+  constructor(public auth: AuthService) {}
 
-  ngOnInit(): void {
-      
-  }
-
-  loginWithRedirect(): void{
+  /**
+   * Avvia il processo di login reindirizzando l'utente alla pagina di autenticazione.
+   */
+  loginWithRedirect(): void {
     this.auth.loginWithRedirect({
       appState: { target: '/callback' }
-    })
+    });
   }
 }
