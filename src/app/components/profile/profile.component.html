@@ -49,6 +49,7 @@
               [(ngModel)]="selectedDate"
               [contentTemplate]="c"
               [disabled]="!isEditMode"
+              [minDate]="{year: 1900, month: 1, day: 1}"
               ngbDatepicker
               #d="ngbDatepicker"
             >
