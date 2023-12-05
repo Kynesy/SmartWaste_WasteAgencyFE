@@ -4,12 +4,14 @@ import { Observable, catchError, map, of } from 'rxjs';
 import { User } from '../models/user';
 import { SessionStorageService } from './session-storage.service';
 
+import {default as BackendURL} from 'BackendURL.json';
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   authToken: string | null = null
-  baseUrl: string = "http://localhost:8081/api/user";
+  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/api/user";
 
   constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }

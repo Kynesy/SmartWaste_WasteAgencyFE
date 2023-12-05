@@ -4,12 +4,14 @@ import { Observable, catchError } from 'rxjs';
 import { Alert } from '../models/alert';
 import { SessionStorageService } from './session-storage.service';
 
+import {default as BackendURL} from 'BackendURL.json';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AlertsService {
   authToken: string | null = null
-  baseUrl: string = "http://localhost:8081/api/alert/";
+  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/api/alert/";
 
   constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }

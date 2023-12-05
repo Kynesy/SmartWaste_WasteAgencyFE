@@ -4,12 +4,14 @@ import { Bin } from '../models/bin';
 import { Observable, catchError } from 'rxjs';
 import { SessionStorageService } from './session-storage.service';
 
+import {default as BackendURL} from 'BackendURL.json';
+
 @Injectable({
   providedIn: 'root'
 })
 export class BinService {
   authToken: string | null = null
-  baseUrl: string = "http://localhost:8081/api/bin/";
+  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/api/bin/";
 
   constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }

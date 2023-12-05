@@ -1,0 +1,6 @@
+{
+    "CityHallBE": "http://ec2-35-169-14-147.compute-1.amazonaws.com",
+    "WasteDIsposalAgencyBE": "http://ec2-54-166-4-107.compute-1.amazonaws.com/",
+    "LoginBE": "http://ec2-54-144-199-15.compute-1.amazonaws.com/",
+    "TaxBE": "http://ec2-54-144-199-15.compute-1.amazonaws.com/"
+}

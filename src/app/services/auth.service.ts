@@ -5,11 +5,13 @@ import { Observable, catchError } from 'rxjs';
 import { SignUpResponse } from '../models/sign-up-response';
 import { LogInResponse } from '../models/log-in-response';
 
+import {default as BackendURL} from 'BackendURL.json';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  authURL: string = "http://localhost:8083/api/auth";
+  authURL: string = BackendURL.LoginBE + "/api/auth";
 
   httpOptions = {
     headers: new HttpHeaders({
