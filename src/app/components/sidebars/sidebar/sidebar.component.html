@@ -5,14 +5,14 @@
     </a>
 
     <!-- User Info Start -->
-    <div *ngIf="authService.user$ | async as user" class="d-flex align-items-center ms-2 mb-2 p-2 rounded w-100" style="background-color: #333B48;">
+    <div *ngIf="isUserLogged()" class="d-flex align-items-center ms-2 mb-2 p-3 rounded w-100" style="background-color: #333B48;">
         <div class="position-relative">
-            <img [src]="user.picture" alt="User's profile picture" class="rounded-circle profile-picture" width="50" height="50"/>
+            <img src="./assets/user.png" alt="User's profile picture" class="rounded-circle profile-picture" width="50" height="50"/>
             <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
         </div>
         <div class="ms-3"  style="color: #F9F9F9;">
-            <h6 class="mb-0">{{ user.nickname }}</h6>
-            <span>Role: {{user['role']}}</span>
+            <h6 class="mb-0">{{ this.username }}</h6>
+            <span>Role: {{this.role}}</span>
         </div>
     </div>
     <!-- User Info End -->

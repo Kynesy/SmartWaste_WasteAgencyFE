@@ -78,6 +78,7 @@ export class BinManagementComponent implements OnInit {
         (response) => {
           this.ngOnInit(); // Aggiorna la lista dei bidoni dopo la cancellazione.
           this.toastService.showSuccessToast('Bin deleted with success.');
+          this.selectedBin = undefined;
         },
         (error) => {
           this.toastService.showErrorToast('Error deleting bin.');

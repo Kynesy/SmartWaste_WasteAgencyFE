@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
 import { Observable, catchError } from 'rxjs';
 import { Alert } from '../models/alert';
 import { SessionStorageService } from './session-storage.service';

@@ -1,23 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
+import { SessionStorageService } from 'src/app/services/session-storage.service';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit{
-  constructor(public authService: AuthService) {}
+export class SidebarComponent{
+  constructor(private storageService: SessionStorageService) {}
   
-  role: string | null = null
+  username: string | null = null;
+  role: string | null = null;
 
-  ngOnInit(): void {
-      this.authService.user$.subscribe(
-        (profile) => {
-          if( profile && profile['role']){
-            this.role = profile['role'];
-          }
-        }
-      )
+  isUserLogged(){
+    this.role = this.storageService.getData("role");
+    this.username = this.storageService.getData('username');
+    return this.storageService.isUserLogged();
   }
 }

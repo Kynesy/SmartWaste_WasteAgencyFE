@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
 build_procedure:
   stage: build
@@ -8,3 +9,21 @@ build_procedure:
     - docker:20.10.16-dind
   script:
     - docker compose build
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+
+deploy_procedure:
+  stage: deploy
+  before_script:
+    - chmod 400 $SSH_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SSH_IP "
+        cd /home/ubuntu/wastedisposalagencyfe/ &&
+        git pull origin &&
+        sudo docker compose down &&
+        sudo docker compose build --no-cache &&
+        sudo docker compose up -d"
+

@@ -1,0 +1,100 @@
+
+<div class="container-fluid pt-4 px-4">
+    <div class="d-flex justify-content-between">
+      <div>
+        <h1 style="font-weight: bold;">Authentication</h1>
+        <p>Welcome to our Sign In page!</p>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col">
+  
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12 d-flex justify-content-center">
+              <div class="ms-2 mb-2 p-3 d-flex align-items-center">
+                <input type="radio" class="btn-check" id="showSignUp" [checked]="showSignUp" (change)="showSignUp = true; showLogIn = false;" autocomplete="off">
+                <label class="btn m-0" for="showSignUp">Sign Up</label>
+                
+                <input type="radio" class="btn-check" id="showLogIn" [checked]="showLogIn" (change)="showLogIn = true; showSignUp = false;" autocomplete="off">
+                <label class="btn m-0" for="showLogIn">Log In</label>              
+              </div>
+            </div>
+          </div>
+        </div>
+        
+            <!-- LOGIN START -->
+            <div *ngIf="showLogIn" class="card mx-auto" style="max-width: 450px;">
+              <div class="ms-2 mb-2 p-3">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="username-label">Username</span>
+                    <input type="text" class="form-control" placeholder="Username" [(ngModel)]="username"/>
+                  </div>
+                  
+                  <div class="input-group mb-3">
+                      <span class="input-group-text" id="password-label">Password</span>
+                      <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control" placeholder="Password" [(ngModel)]="password" name="password" required />
+                  </div>
+    
+                  <div class="p-3 d-flex justify-content-between align-items-center">
+                      <button type="submit" class="btn btn-primary" (click)="logIn()">Log In</button>
+                      <div class="input-group-append">
+                          <div class=" form-check form-switch">
+                              <input class="form-check-input" type="checkbox" role="switch" [checked]="showPassword" (change)="togglePasswordVisibility()"> 
+                              <span class="p-2">Show Password</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <!-- LOGIN END -->
+    
+  
+          <!-- SIGNUP START -->
+          <div *ngIf="showSignUp" class="card mx-auto" style="max-width: 450px;">
+            <div class="ms-2 mb-2 p-3">
+  
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="role-label">Role</span>
+                  <select class="form-select" id="roleSelector" [(ngModel)]="role">
+                    <option selected value="OPERATOR">Operator</option>
+                  </select>
+                </div>
+  
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="username-label">Username</span>
+                  <input type="text" class="form-control" placeholder="Username" [(ngModel)]="username"/>
+                </div>
+  
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="email-label">Email</span>
+                  <input type="text" class="form-control" placeholder="Email" [(ngModel)]="email"/>
+                </div>
+                
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="password-label">Password</span>
+                    <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control" placeholder="Password" [(ngModel)]="password" name="password" required />
+                </div>
+  
+                <div class="p-3 d-flex justify-content-between align-items-center">
+                  <button type="submit" class="btn btn-primary" (click)="signUp()">Sign Up</button>
+                  <div class="input-group-append">
+                      <div class=" form-check form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" [checked]="showPassword" (change)="togglePasswordVisibility()"> 
+                          <span class="p-2">Show Password</span>
+                      </div>
+                  </div>
+              </div>
+  
+            </div>
+          </div>
+          <!-- SIGNUP END -->
+  
+  
+      </div>
+    </div>
+  
+  </div>
+  
+  

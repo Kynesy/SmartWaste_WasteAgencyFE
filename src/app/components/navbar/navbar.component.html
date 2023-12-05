@@ -1,4 +1,8 @@
 <nav class="navbar navbar-expand navbar-light sticky-top p-1 d-flex justify-content-end" style="background-color: white;">
-  <app-login-button *ngIf="(authService.isAuthenticated$ | async) === false"></app-login-button>
-  <app-logout-button *ngIf="(authService.isAuthenticated$ | async) === true"></app-logout-button>
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a routerLink="/auth" *ngIf="!this.storageService.isUserLogged()" routerLinkActive="active" class="nav-link">Log In</a>
+      <a routerLink="/" *ngIf="this.storageService.isUserLogged()" (click)="logOut()"  class="nav-link text-danger">Log Out</a>
+    </li>
+  </ul>
 </nav>

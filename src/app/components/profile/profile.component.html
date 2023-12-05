@@ -4,17 +4,19 @@
     <p>Welcome to your profile page!</p>
   </div>
 
-  <div class="card mx-auto" style="max-width: 400px;">
-    <div *ngIf="authService.user$ | async as user" class="d-flex align-items-center ms-2 mb-2 p-3">
-      <div class="position-relative">
-        <img [src]="user.picture" alt="User's profile picture" class="rounded-circle profile-picture" width="50"
-          height="50" />
-      </div>
-      <div class="ms-3">
-        <h6 class="mb-0">{{ user.email }}</h6>
-        <span>Role: {{ user['role'] }}</span>
-      </div>
-    </div>
+  <div class="row">
+    <div class="col">
+      <div class="card mx-auto" style="max-width: 450px;">
+        <div *ngIf="true" class="d-flex align-items-center ms-2 mb-2 p-3">
+          <div class="position-relative">
+            <img src="/assets/user.png" alt="User's profile picture" class="rounded-circle profile-picture" width="50"
+              height="50" />
+          </div>
+          <div class="ms-3">
+            <h6 class="mb-0">{{ user.username }}</h6>
+            <span>Role: {{ role }}</span>
+          </div>
+        </div>
 
     <div *ngIf="user" class="ms-2 mb-2 p-3">
       <div class="input-group mb-3">

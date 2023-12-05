@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +7,6 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class AppComponent {
   title = 'CityHallFE';
-  constructor(public authService: AuthService){}
+  constructor(){}
 
 }

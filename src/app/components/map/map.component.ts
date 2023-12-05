@@ -93,6 +93,7 @@ export class MapComponent {
       this.clearMarkers();
       if (this.bins && this.bins.length > 0) {
         this.displayAllBins();
+        this.map.setZoomAround({lat: 40.3539, lng: 18.1750}, 14);
       }
     }
   }

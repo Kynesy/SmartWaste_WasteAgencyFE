@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
+import { SessionStorageService } from 'src/app/services/session-storage.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,5 +7,9 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
-  constructor(public authService: AuthService){}
+  constructor(public storageService: SessionStorageService){}
+
+  logOut(){
+    this.storageService.logOutUser();
+  }
 }

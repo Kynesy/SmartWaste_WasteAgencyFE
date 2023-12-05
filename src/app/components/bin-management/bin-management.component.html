@@ -24,11 +24,11 @@
             <h6>Select a position on Map</h6>
             <div  *ngIf="selectedPosition" class="row">
               <div class="col">
-                <p><strong>Latitude: </strong> {{selectedPosition.lat}}°</p>
+                <p><strong>Latitude: </strong> {{selectedPosition!.lat}}°</p>
               </div>
               
               <div class="col">
-                <p><strong>Longitude: </strong> {{selectedPosition.lng}}°</p>
+                <p><strong>Longitude: </strong> {{selectedPosition!.lng}}°</p>
               </div>
               <button class="btn btn-primary" (click)="createBin()">Add the Bin!</button>
             </div>
@@ -43,13 +43,13 @@
             <h6>Select a marker on Map</h6>
             <div *ngIf="selectedBin" class="row">
               <div class="col">
-                <p><strong>Bin ID: </strong> {{selectedBin.id}} </p>
-                <p><strong>Latitude: </strong> {{selectedBin.latitude}} °</p>
+                <p><strong>Bin ID: </strong> {{selectedBin!.id}} </p>
+                <p><strong>Latitude: </strong> {{selectedBin!.latitude}} °</p>
               </div>
               
               <div class="col">
-                <p><strong>Capacity: </strong> {{selectedBin.capacity}} kg</p>
-                <p><strong>Longitude: </strong> {{selectedBin.longitude}} °</p>
+                <p><strong>Capacity: </strong> {{selectedBin!.capacity}} kg</p>
+                <p><strong>Longitude: </strong> {{selectedBin!.longitude}} °</p>
               </div>
 
               <button class="btn btn-danger" (click)="deleteBin()">Delete the Bin!</button>
