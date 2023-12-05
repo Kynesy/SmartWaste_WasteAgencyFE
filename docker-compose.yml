@@ -9,7 +9,7 @@ services:
     image: waste-disposal-fe # Replace with the Docker image name you used earlier
     container_name: waste-disposal-fe # Replace with a suitable container name
     ports:
-      - "4201:80" # Map port 4200 of the host to port 4200 of the container
+      - "80:80" # Map port 4200 of the host to port 4200 of the container
     networks:
       - waste-disposal-fe
 
