@@ -11,7 +11,7 @@ import {default as BackendURL} from 'BackendURL.json';
   providedIn: 'root'
 })
 export class AuthService {
-  authURL: string = BackendURL.LoginBE + "/api/auth";
+  authURL: string = BackendURL.LoginBE + "/auth";
 
   httpOptions = {
     headers: new HttpHeaders({

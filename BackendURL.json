@@ -1,6 +1,6 @@
 {
-    "CityHallBE": "http://ec2-35-169-14-147.compute-1.amazonaws.com",
-    "WasteDIsposalAgencyBE": "http://ec2-54-166-4-107.compute-1.amazonaws.com/",
-    "LoginBE": "http://ec2-54-144-199-15.compute-1.amazonaws.com/",
-    "TaxBE": "http://ec2-54-144-199-15.compute-1.amazonaws.com/"
+    "CityHallBE": "https://vsymewcrye.execute-api.us-east-1.amazonaws.com/sviluppo",
+    "WasteDIsposalAgencyBE": "https://kca3clye8e.execute-api.us-east-1.amazonaws.com/sviluppo",
+    "LoginBE": "https://rpjnddqxyh.execute-api.us-east-1.amazonaws.com/sviluppo/",
+    "TaxBE": "https://m05sfecc2g.execute-api.us-east-1.amazonaws.com/sviluppo/"
 }

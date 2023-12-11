@@ -11,7 +11,7 @@ import {default as BackendURL} from 'BackendURL.json';
 })
 export class UserService {
   authToken: string | null = null
-  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/api/user";
+  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/user";
 
   constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }

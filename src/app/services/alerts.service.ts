@@ -11,7 +11,7 @@ import {default as BackendURL} from 'BackendURL.json';
 })
 export class AlertsService {
   authToken: string | null = null
-  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/api/alert/";
+  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/alert/";
 
   constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }

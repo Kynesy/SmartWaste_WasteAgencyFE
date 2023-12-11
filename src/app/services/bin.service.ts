@@ -11,7 +11,7 @@ import {default as BackendURL} from 'BackendURL.json';
 })
 export class BinService {
   authToken: string | null = null
-  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/api/bin/";
+  baseUrl: string = BackendURL.WasteDIsposalAgencyBE + "/bin/";
 
   constructor(private storageService: SessionStorageService, private httpClient: HttpClient) {
   }
