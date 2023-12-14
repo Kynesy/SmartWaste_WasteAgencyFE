@@ -4,7 +4,9 @@ import 'leaflet-routing-machine';
 
 import { Bin } from 'src/app/models/bin';
 import { MapService } from 'src/app/services/map.service';
-import TspNearestNeighbor from 'src/app/utils/TspNearestNeighbor';
+import { ToastService } from 'src/app/services/toast.service';
+import { TspSolver } from 'src/app/utils/TspSolverBridge';
+import { TspSolverService } from 'src/app/utils/tsp-solver.service';
 
 Leaflet.Icon.Default.imagePath = 'assets/';
 
@@ -69,7 +71,7 @@ export class MapComponent {
     center: { lat: 40.3539, lng: 18.1750 }
   }
 
-  constructor(private mapService: MapService, private tspSolver: TspNearestNeighbor) { }
+  constructor(private mapService: MapService, private tspSolverService: TspSolverService, private toastService: ToastService) { }
 
   // Callback quando la mappa è pronta
   onMapReady($event: Leaflet.Map) {
@@ -166,14 +168,17 @@ export class MapComponent {
 
     return new Promise((resolve, reject) => {
       if (alertBins!.length < 1) {
+        this.toastService.showErrorToast("Not enought full bins to create a path");
         reject('There are not enough bins with alert level 1 or 2 to calculate a path.');
+        
       } else {
         // ottengo la matrice dei costi dal servizio
         this.mapService.calculateDistanceMatrix(locations).subscribe((response: any) => {
           const durationsMatrix = response.durations;
 
           // calcolo la soluzione ottimale
-          const routingSolution = this.tspSolver.findOptimalSolution(durationsMatrix);
+          const tspSolver: TspSolver = this.tspSolverService.getSolver();
+          const routingSolution = tspSolver.findOptimalSolution(durationsMatrix);
 
           // riordino i cestini secondo la soluzione ottimale
           for (var i = 0; i < routingSolution.path.length; i++) {

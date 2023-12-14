@@ -1,4 +1,6 @@
-export default class TspNearestNeighbor {
+import { TspSolver } from "./TspSolverBridge";
+
+export default class TspNearestNeighbor implements TspSolver {
   findOptimalSolution(distances: number[][]): any {
     const numLocations = distances.length;
     const visitedNodes: number[] = [];
