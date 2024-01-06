@@ -22,17 +22,16 @@
         <div *ngIf="showAddBin" class="card p-4 mx-auto">
             <h4>Add Bin Form</h4>
             <h6>Select a position on Map</h6>
-            <div  *ngIf="selectedPosition" class="row">
+            <div *ngIf="selectedPosition" class="row">
               <div class="col">
-                <p><strong>Latitude: </strong> {{selectedPosition!.lat}}°</p>
+                <p><strong>Latitude: </strong> {{selectedPosition!.lat | number:'1.2-2'}}°</p>
               </div>
-              
               <div class="col">
-                <p><strong>Longitude: </strong> {{selectedPosition!.lng}}°</p>
+                <p><strong>Longitude: </strong> {{selectedPosition!.lng | number:'1.2-2'}}°</p>
               </div>
               <button class="btn btn-primary" (click)="createBin()">Add the Bin!</button>
             </div>
-
+            
             <div *ngIf="!selectedPosition" class="row">
                 <p>No position selected</p>
             </div>
