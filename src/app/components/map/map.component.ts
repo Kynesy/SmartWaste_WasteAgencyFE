@@ -113,10 +113,26 @@ export class MapComponent {
     for (let index = 0; index < this.bins.length; index++) {
       const tmpBin = this.bins[index];
       const marker = this.generateBinMarker(tmpBin, index);
-      marker.addTo(this.map).bindPopup(`<b>Bin ID: </b>${tmpBin.id}<br><b>Capacity: </b>${tmpBin.capacity}`);
+      
+      const copyButton = `<button onclick="copyBinInfo(${tmpBin.id}, ${tmpBin.latitude}, ${tmpBin.longitude}, ${tmpBin.capacity})">Copy Info</button>`;
+      const popupContent = `<b>Bin ID:</b> ${tmpBin.id}<br><b>Capacity:</b> ${tmpBin.capacity}<br>${copyButton}`;
+
+      
+      marker.addTo(this.map).bindPopup(popupContent);
       this.map.panTo({ lat: tmpBin.latitude, lng: tmpBin.longitude });
       this.markers.push(marker)
     }
+  }
+
+  copyBinInfo(id: string, lat: number, lng: number, capacity: number) {
+    const binInfo = `${id} ${lat} ${lng} ${capacity}`;
+    const el = document.createElement('textarea');
+    el.value = binInfo;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('Bin information copied to clipboard!');
   }
 
   // Genera un marker per un bidone
