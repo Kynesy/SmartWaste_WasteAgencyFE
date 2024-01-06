@@ -113,8 +113,8 @@ export class MapComponent {
     for (let index = 0; index < this.bins.length; index++) {
       const tmpBin = this.bins[index];
       const marker = this.generateBinMarker(tmpBin, index);
-      
-      const copyButton = `<button (click)="copyBinInfo('${tmpBin.id}', ${tmpBin.latitude}, ${tmpBin.longitude}, ${tmpBin.capacity}')">Copy Info</button>`;
+
+      const copyButton = `<button class="btn btn-primary" (click)="copyBinInfo('${tmpBin.id}', ${tmpBin.latitude}, ${tmpBin.longitude}, ${tmpBin.capacity})">Copy Info</button>`;
       const popupContent = `<b>Bin ID:</b> ${tmpBin.id}<br><b>Capacity:</b> ${tmpBin.capacity}<br>${copyButton}`;
       
       marker.addTo(this.map).bindPopup(popupContent);
