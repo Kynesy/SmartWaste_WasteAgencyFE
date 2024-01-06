@@ -139,7 +139,7 @@ export class MapComponent {
     el.select();
     document.execCommand('copy');
     document.body.removeChild(el);
-    alert('Bin information copied to clipboard!');
+    console.log('Bin information copied to clipboard!');
   }
   
 

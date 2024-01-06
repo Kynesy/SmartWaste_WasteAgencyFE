@@ -37,12 +37,12 @@
         </div>
         
         <div class="col">
-          <p><strong>Latitude: </strong> {{selectedBin.latitude}}°</p>
+          <p><strong>Latitude: </strong> {{selectedBin.latitude | number:'1.2-2'}}°</p>
           <p><strong>Sorted Waste: </strong> {{selectedBin.sortedWaste}} kg</p>
         </div>
 
         <div class="col">
-          <p><strong>Longitude: </strong> {{selectedBin.longitude}}°</p>
+          <p><strong>Longitude: </strong> {{selectedBin.longitude | number:'1.2-2'}}°</p>
           <p><strong>Unsorted Waste: </strong> {{selectedBin.unsortedWaste}} kg</p>
         </div>
       </div>
