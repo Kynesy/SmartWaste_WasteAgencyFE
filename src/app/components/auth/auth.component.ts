@@ -48,7 +48,7 @@ export class AuthComponent {
             },
             (error) => {
               console.error("Error creating user");
-              this.toastService.showErrorToast(error.error['message']);
+              this.toastService.showErrorToast('Error creating user');
             }
           );
 
@@ -57,9 +57,9 @@ export class AuthComponent {
           this.toastService.showErrorToast("Sign Up Error");
           this.storageService.logOutUser();
         }
-      } catch (error:any) {
+      } catch (error) {
         console.error('Error occurred during sign up');
-        this.toastService.showErrorToast(error.error['message']);
+        this.toastService.showErrorToast('Error occurred during sign up');
         this.storageService.logOutUser();
       }
     } else {
