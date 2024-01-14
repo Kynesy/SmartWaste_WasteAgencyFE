@@ -47,7 +47,7 @@ export class AuthComponent {
               console.log("User created successfully");
             },
             (error) => {
-              console.error("Error creating user: ", error);
+              console.error("Error creating user");
               this.toastService.showErrorToast(error.error['message']);
             }
           );
@@ -58,7 +58,7 @@ export class AuthComponent {
           this.storageService.logOutUser();
         }
       } catch (error:any) {
-        console.error('Error occurred during sign in:', error);
+        console.error('Error occurred during sign up');
         this.toastService.showErrorToast(error.error['message']);
         this.storageService.logOutUser();
       }
@@ -86,7 +86,7 @@ export class AuthComponent {
           this.storageService.logOutUser();
         }
       } catch (error) {
-        console.error('Error occurred during Log In:', error);
+        console.error('Error occurred during Log In');
         this.toastService.showErrorToast("Log in Error");
         this.storageService.logOutUser();
       }
