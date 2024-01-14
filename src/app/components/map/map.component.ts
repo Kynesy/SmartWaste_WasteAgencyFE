@@ -240,6 +240,7 @@ export class MapComponent {
       this.map.removeLayer(this.pathPolyline);
       this.binsToUnload = [];
       this.displayAllBins();
+      this.map.setZoomAround({lat: 40.3539, lng: 18.1750}, 14);
     }
   }
 
