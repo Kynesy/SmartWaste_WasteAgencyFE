@@ -122,7 +122,7 @@ export class MapComponent {
         const button = popup.getElement().querySelector(".copy");
         if (button) {
           button.addEventListener("click", () => this.copyBinInfo(tmpBin.id, tmpBin.latitude, tmpBin.longitude, tmpBin.capacity));
-          this.toastService.showSuccessToast("Bin infos copied to clipboard!");
+          button.addEventListener("click", () => this.toastService.showSuccessToast("Bin infos copied to clipboard!"));
         }
       });
       this.map.panTo({ lat: tmpBin.latitude, lng: tmpBin.longitude });
