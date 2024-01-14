@@ -140,6 +140,7 @@ export class MapComponent {
     document.execCommand('copy');
     document.body.removeChild(el);
     console.log('Bin information copied to clipboard!');
+    this.toastService.showSuccessToast("Bin infos copied to clipboard!");
   }
   
 
